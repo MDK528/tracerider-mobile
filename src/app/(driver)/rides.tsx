@@ -7,7 +7,7 @@ import {
   cancelRide,
   completeRide,
   getAvailableRequests,
-  getMyRides,
+  getMyActiveRide,
   markArriving,
   rejectRide,
 } from "@/services/bookings";
@@ -20,7 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function DriverRides() {
   const [rideLoading, setRideLoading] = useState(false);
   const [availableRequests, setAvailableRequests] = useState<Booking[]>([]);
-  const [activeRides, setActiveRides] = useState<Booking[]>([]);
+  const [activeRide, setActiveRide] = useState<Booking | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -34,21 +34,21 @@ export default function DriverRides() {
     }
   }, []);
 
-  const fetchActiveRides = useCallback(async () => {
+  const fetchActiveRide = useCallback(async () => {
     try {
-      const data = await getMyRides();
-      setActiveRides(data);
+      const data = await getMyActiveRide();
+      setActiveRide(data);
     } catch (err: any) {
-      setErrorMessage(err?.response?.data?.message ?? "Unable to load your rides.");
+      setErrorMessage(err?.response?.data?.message ?? "Unable to load your active ride.");
       setModalVisible(true);
     }
   }, []);
 
   const fetchAll = useCallback(async () => {
     setRideLoading(true);
-    await Promise.all([fetchAvailableRequests(), fetchActiveRides()]);
+    await Promise.all([fetchAvailableRequests(), fetchActiveRide()]);
     setRideLoading(false);
-  }, [fetchAvailableRequests, fetchActiveRides]);
+  }, [fetchAvailableRequests, fetchActiveRide]);
 
   useFocusEffect(
     useCallback(() => {
@@ -86,7 +86,7 @@ export default function DriverRides() {
     setRideLoading(true);
     try {
       await markArriving(rideId);
-      await fetchActiveRides();
+      await fetchActiveRide();
     } catch (err: any) {
       setErrorMessage(err?.response?.data?.message ?? "Unable to mark arriving.");
       setModalVisible(true);
@@ -180,47 +180,51 @@ export default function DriverRides() {
 
           <View className="rounded-3xl bg-surface border border-border p-4 gap-4">
             <Text variant="heading-sm" weight="bold">
-              Active rides
+              Active ride
             </Text>
             {rideLoading ? (
               <ActivityIndicator size="small" color={Colors.dark} />
-            ) : activeRides.length ? (
-              activeRides.map((ride) => (
-                <View key={ride.id} className="rounded-2xl bg-dark p-4">
-                  <Text variant="body-sm" color="white" className="mb-1">
-                    {ride.pickupCity} → {ride.dropLocation}
-                  </Text>
-                  <Text variant="body-md" weight="semibold" color="white" className="mb-2">
-                    Status: {ride.status}
-                  </Text>
-                  <View className="flex-row gap-2 flex-wrap">
+            ) : activeRide ? (
+              <View className="rounded-2xl bg-dark p-4">
+                <Text variant="body-sm" color="white" className="mb-1">
+                  {activeRide.pickupCity} → {activeRide.dropLocation}
+                </Text>
+                <Text variant="body-md" weight="semibold" color="white" className="mb-2">
+                  Status: {activeRide.status}
+                </Text>
+                <View className="flex-row gap-2 flex-wrap">
+                  {activeRide.status === "driver_assigned" && (
                     <Button
                       label="Arriving"
                       variant="secondary"
                       size="sm"
                       loading={rideLoading}
-                      onPress={() => handleMarkArriving(ride.id)}
+                      onPress={() => handleMarkArriving(activeRide.id)}
                     />
+                  )}
+                  {activeRide.status === "in_progress" && (
                     <Button
                       label="Complete"
                       variant="primary"
                       size="sm"
                       loading={rideLoading}
-                      onPress={() => handleCompleteRide(ride.id)}
+                      onPress={() => handleCompleteRide(activeRide.id)}
                     />
+                  )}
+                  {(activeRide.status === "driver_assigned" || activeRide.status === "driver_arriving") && (
                     <Button
                       label="Cancel"
                       variant="danger"
                       size="sm"
                       loading={rideLoading}
-                      onPress={() => handleCancelRide(ride.id)}
+                      onPress={() => handleCancelRide(activeRide.id)}
                     />
-                  </View>
+                  )}
                 </View>
-              ))
+              </View>
             ) : (
               <Text variant="body-sm" color="secondary">
-                No active rides currently.
+                No active ride currently.
               </Text>
             )}
           </View>

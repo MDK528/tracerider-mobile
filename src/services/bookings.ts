@@ -3,13 +3,10 @@ import type {
   Booking,
   CreateBookingPayload,
   CreateBookingResponse,
-  VerifyOtpPayload,
-  CancelRidePayload,
   AcceptRideResponse,
   RideStatusResponse,
   CompleteRideResponse,
-  MessageResponse,
-} from "@/types/bookings.ts";
+} from "@/types/bookings";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -17,91 +14,68 @@ interface ApiResponse<T> {
   data: T;
 }
 
-export const createBooking = async (payload: CreateBookingPayload) => {
-  const { data } = await api.post<ApiResponse<CreateBookingResponse>>(
-    "/bookings",
-    payload
-  );
+// ---- Passenger ----
 
+export const createBooking = async (payload: CreateBookingPayload) => {
+  const { data } = await api.post<ApiResponse<CreateBookingResponse>>("/bookings", payload);
   return data.data;
 };
 
 export const getMyRides = async () => {
-  const { data } = await api.get<ApiResponse<Booking[]>>(
-    "/bookings/my-rides"
-  );
-
+  const { data } = await api.get<ApiResponse<Booking[]>>("/bookings/my-rides");
   return data.data;
 };
 
-export const getBooking = async (id: string) => {
-  const { data } = await api.get<ApiResponse<Booking>>(
-    `/bookings/${id}`
-  );
-
-  return data.data;
-};
-
-export const verifyOtp = async (
-  bookingId: string,
-  payload: VerifyOtpPayload
-) => {
+export const verifyOtp = async (bookingId: string, otp: string) => {
   const { data } = await api.post<ApiResponse<RideStatusResponse>>(
     `/bookings/${bookingId}/verify-otp`,
-    payload
+    { otp }
   );
-
   return data.data;
 };
 
-export const getAvailableRequests = async () => {
-  const { data } = await api.get<ApiResponse<Booking[]>>(
-    "/bookings/available"
-  );
+// ---- Driver ----
 
+export const getAvailableRequests = async () => {
+  const { data } = await api.get<ApiResponse<Booking[]>>("/bookings/available");
+  return data.data;
+};
+
+export const getMyActiveRide = async () => {
+  const { data } = await api.get<ApiResponse<Booking | null>>("/bookings/my-active-ride");
   return data.data;
 };
 
 export const acceptRide = async (bookingId: string) => {
-  const { data } = await api.patch<ApiResponse<AcceptRideResponse>>(
-    `/bookings/${bookingId}/accept`
-  );
-
+  const { data } = await api.patch<ApiResponse<AcceptRideResponse>>(`/bookings/${bookingId}/accept`);
   return data.data;
 };
 
 export const rejectRide = async (bookingId: string) => {
-  const { data } = await api.patch<ApiResponse<MessageResponse>>(
-    `/bookings/${bookingId}/reject`
-  );
-
-  return data.data;
+  const { data } = await api.patch<ApiResponse<null>>(`/bookings/${bookingId}/reject`);
+  return data.message;
 };
 
 export const markArriving = async (bookingId: string) => {
-  const { data } = await api.patch<ApiResponse<RideStatusResponse>>(
-    `/bookings/${bookingId}/arrive`
-  );
-
+  const { data } = await api.patch<ApiResponse<RideStatusResponse>>(`/bookings/${bookingId}/arrive`);
   return data.data;
 };
 
 export const completeRide = async (bookingId: string) => {
-  const { data } = await api.patch<ApiResponse<CompleteRideResponse>>(
-    `/bookings/${bookingId}/complete`
-  );
-
+  const { data } = await api.patch<ApiResponse<CompleteRideResponse>>(`/bookings/${bookingId}/complete`);
   return data.data;
 };
 
-export const cancelRide = async (
-  bookingId: string,
-  payload?: CancelRidePayload
-) => {
-  const { data } = await api.patch<ApiResponse<RideStatusResponse>>(
-    `/bookings/${bookingId}/cancel`,
-    payload
-  );
+// ---- Shared (passenger or driver) ----
 
+export const getBooking = async (bookingId: string) => {
+  const { data } = await api.get<ApiResponse<Booking>>(`/bookings/${bookingId}`);
+  return data.data;
+};
+
+export const cancelRide = async (bookingId: string, reason?: string) => {
+  const { data } = await api.patch<ApiResponse<RideStatusResponse>>(`/bookings/${bookingId}/cancel`, {
+    reason,
+  });
   return data.data;
 };
