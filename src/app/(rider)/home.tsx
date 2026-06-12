@@ -11,7 +11,7 @@ export default function RiderHome() {
     <SafeAreaView className="flex-1 bg-bg">
       <View className="flex-1 items-center justify-center px-6 gap-4">
         <Text variant="heading-sm" weight="bold" color="primary">
-          Welcome, {user?.name} 👋
+          Welcome, {user?.fullName} 👋
         </Text>
         <Text variant="body-md" color="secondary">
           Rider home — coming soon
