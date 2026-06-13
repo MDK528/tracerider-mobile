@@ -2,6 +2,8 @@ import { ErrorModal } from "@/components/ErrorModal";
 import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
 import { Colors } from "@/constants/colors";
+import { SOCKET_EVENTS } from "@/constants/socketEvents";
+import { getSocket } from "@/services/socket";
 import {
   acceptRide,
   cancelRide,
@@ -12,8 +14,9 @@ import {
   rejectRide,
 } from "@/services/bookings";
 import type { Booking } from "@/types/bookings";
+import * as Location from "expo-location";
 import { useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -55,6 +58,39 @@ export default function DriverRides() {
       fetchAll();
     }, [fetchAll])
   );
+
+  // Emit live location every ~3s while there's an active ride
+  useEffect(() => {
+    const trackableStatuses: Booking["status"][] = ["driver_assigned", "driver_arriving", "in_progress"];
+    if (!activeRide || !trackableStatuses.includes(activeRide.status)) return;
+
+    let subscription: Location.LocationSubscription | null = null;
+    let cancelled = false;
+
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted" || cancelled) return;
+
+      const socket = await getSocket();
+      if (cancelled) return;
+
+      subscription = await Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.High, timeInterval: 3000, distanceInterval: 5 },
+        (loc) => {
+          socket.emit(SOCKET_EVENTS.DRIVER_LOCATION_UPDATE, {
+            lat: loc.coords.latitude,
+            lng: loc.coords.longitude,
+            rideId: activeRide.id,
+          });
+        }
+      );
+    })();
+
+    return () => {
+      cancelled = true;
+      subscription?.remove();
+    };
+  }, [activeRide?.id, activeRide?.status]);
 
   async function handleAcceptRide(rideId: string) {
     setRideLoading(true);
