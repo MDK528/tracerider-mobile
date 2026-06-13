@@ -1,5 +1,43 @@
-import { Stack } from "expo-router";
+import { Tabs } from "expo-router";
+import { Home, Car, User } from "lucide-react-native";
+import { Colors } from "@/constants/colors";
 
 export default function RiderLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: Colors.dark,
+        tabBarInactiveTintColor: "#9CA3AF",
+        tabBarStyle: {
+          backgroundColor: Colors.surface,
+          borderTopColor: Colors.border,
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="rides"
+        options={{
+          title: "Rides",
+          tabBarIcon: ({ color, size }) => <Car color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: "Account",
+          tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen name="ride/[id]" options={{ href: null }} />
+      <Tabs.Screen name="book" options={{ href: null }} />
+    </Tabs>
+  );
 }
