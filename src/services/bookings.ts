@@ -79,3 +79,8 @@ export const cancelRide = async (bookingId: string, reason?: string) => {
   });
   return data.data;
 };
+
+export const getShareToken = async (bookingId: string) => {
+  const { data } = await api.get<ApiResponse<{ token: string }>>(`/bookings/${bookingId}/share-token`);
+  return data.data.token;
+};
