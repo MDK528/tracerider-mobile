@@ -1,5 +1,6 @@
 import { ErrorModal } from "@/components/ErrorModal";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { Text } from "@/components/ui/Text";
 import { Colors } from "@/constants/colors";
 import { SOCKET_EVENTS } from "@/constants/socketEvents";
@@ -12,6 +13,7 @@ import {
   getMyActiveRide,
   markArriving,
   rejectRide,
+  verifyOtp,
 } from "@/services/bookings";
 import type { Booking } from "@/types/bookings";
 import * as Location from "expo-location";
@@ -24,6 +26,8 @@ export default function DriverRides() {
   const [rideLoading, setRideLoading] = useState(false);
   const [availableRequests, setAvailableRequests] = useState<Booking[]>([]);
   const [activeRide, setActiveRide] = useState<Booking | null>(null);
+  const [otpValue, setOtpValue] = useState("");
+  const [otpSubmitting, setOtpSubmitting] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -115,6 +119,22 @@ export default function DriverRides() {
       setModalVisible(true);
     } finally {
       setRideLoading(false);
+    }
+  }
+
+  async function handleVerifyOtp() {
+    if (!activeRide || otpValue.length !== 4) return;
+
+    setOtpSubmitting(true);
+    try {
+      await verifyOtp(activeRide.id, otpValue.trim());
+      setOtpValue("");
+      await fetchAll();
+    } catch (err: any) {
+      setErrorMessage(err?.response?.data?.message ?? "Invalid OTP.");
+      setModalVisible(true);
+    } finally {
+      setOtpSubmitting(false);
     }
   }
 
@@ -228,6 +248,25 @@ export default function DriverRides() {
                 <Text variant="body-md" weight="semibold" color="white" className="mb-2">
                   Status: {activeRide.status}
                 </Text>
+                {activeRide.status === "driver_arriving" && (
+                  <View className="gap-2 mb-3">
+                    <Input
+                      placeholder="Enter passenger OTP"
+                      value={otpValue}
+                      onChangeText={setOtpValue}
+                      keyboardType="numeric"
+                      maxLength={4}
+                    />
+                    <Button
+                      label="Verify OTP & start ride"
+                      variant="secondary"
+                      size="sm"
+                      loading={otpSubmitting}
+                      disabled={otpValue.length !== 4}
+                      onPress={handleVerifyOtp}
+                    />
+                  </View>
+                )}
                 <View className="flex-row gap-2 flex-wrap">
                   {activeRide.status === "driver_assigned" && (
                     <Button
