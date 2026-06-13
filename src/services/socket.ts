@@ -3,7 +3,7 @@ import { storage } from "./storage";
 
 // Socket.IO is mounted on the root HTTP server, not under /api/v1 —
 // derive the bare host from the same env var the REST client uses.
-const SOCKET_URL = (process.env.EXPO_PUBLIC_API_URL as string).replace(/\/api\/v1\/?$/, "");
+export const SOCKET_URL = (process.env.EXPO_PUBLIC_API_URL as string).replace(/\/api\/v1\/?$/, "");
 
 let socket: Socket | null = null;
 
