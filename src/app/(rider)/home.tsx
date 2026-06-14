@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
 import { Colors } from "@/constants/colors";
 import { useAuth } from "@/context/AuthContext";
-import { getMyActiveRide } from "@/services/bookings";
+import { getPassengerActiveRide } from "@/services/bookings";
 import type { Booking } from "@/types/bookings";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -21,7 +21,7 @@ const STATUS_LABELS: Record<Booking["status"], string> = {
 };
 
 export default function RiderHome() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const [activeRide, setActiveRide] = useState<Booking | null>(null);
@@ -32,7 +32,7 @@ export default function RiderHome() {
   const fetchActiveRide = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getMyActiveRide();
+      const data = await getPassengerActiveRide();
       setActiveRide(data);
     } catch (err: any) {
       setErrorMessage(err?.response?.data?.message ?? "Unable to load your active ride.");
@@ -110,7 +110,10 @@ export default function RiderHome() {
                   <Text variant="body-sm" color="white">
                     ₹ {activeRide.fareAmount / 100}
                   </Text>
-                  <Button
+                  
+                </View>
+
+                <Button
                     label="View ride"
                     variant="secondary"
                     size="sm"
@@ -118,7 +121,6 @@ export default function RiderHome() {
                       router.push({ pathname: "/ride/[id]", params: { id: activeRide.id } })
                     }
                   />
-                </View>
               </View>
             ) : (
               <View className="rounded-3xl bg-bg border border-border p-4">
@@ -131,9 +133,9 @@ export default function RiderHome() {
         </View>
       </ScrollView>
 
-      <View className="px-6 pb-6">
+      {/* <View className="px-6 pb-6">
         <Button label="Logout" variant="outline" size="md" onPress={logout} />
-      </View>
+      </View> */}
 
       <ErrorModal visible={modalVisible} message={errorMessage} onClose={() => setModalVisible(false)} />
     </SafeAreaView>

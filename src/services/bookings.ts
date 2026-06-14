@@ -46,6 +46,11 @@ export const getMyActiveRide = async () => {
   return data.data;
 };
 
+export const getPassengerActiveRide = async () => {
+  const { data } = await api.get<ApiResponse<Booking | null>>("/bookings/passenger/active-ride");
+  return data.data;
+};
+
 export const acceptRide = async (bookingId: string) => {
   const { data } = await api.patch<ApiResponse<AcceptRideResponse>>(`/bookings/${bookingId}/accept`);
   return data.data;

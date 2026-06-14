@@ -35,7 +35,7 @@ function RootLayoutNav() {
     if (user?.role === "driver") {
       router.replace("/(driver)/home");
     } else {
-      router.replace("/(rider)/rides");
+      router.replace("/(rider)/home");
     }
   }, [isAuthenticated, isLoading, user]);
 
