@@ -53,9 +53,22 @@ export default function DriverRides() {
 
   const fetchAll = useCallback(async () => {
     setRideLoading(true);
-    await Promise.all([fetchAvailableRequests(), fetchActiveRide()]);
-    setRideLoading(false);
-  }, [fetchAvailableRequests, fetchActiveRide]);
+    try {
+      const active = await getMyActiveRide();
+      setActiveRide(active);
+
+      if (!active) {
+        await fetchAvailableRequests();
+      } else {
+        setAvailableRequests([]); // clear stale requests
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.response?.data?.message ?? "Unable to load rides.");
+      setModalVisible(true);
+    } finally {
+      setRideLoading(false);
+    }
+  }, [fetchAvailableRequests]);
 
   useFocusEffect(
     useCallback(() => {
@@ -246,7 +259,7 @@ export default function DriverRides() {
                   {activeRide.pickupCity} → {activeRide.dropLocation}
                 </Text>
                 <Text variant="body-md" weight="semibold" color="white" className="mb-2">
-                  Status: {activeRide.status}
+                  Status: {activeRide.status.replaceAll("_", " ").toUpperCase()}
                 </Text>
                 {activeRide.status === "driver_arriving" && (
                   <View className="gap-2 mb-3">
