@@ -146,8 +146,7 @@ export default function RideTracking() {
     try {
       const data = await getBooking(id);
       setBooking(data);
-      // console.log('Booking', booking!.otp);
-      
+
       if (data.driverId) {
         try {
           const driverData = await getPublicDriverProfile(data.driverId);
@@ -309,9 +308,14 @@ export default function RideTracking() {
           {/* Driver info */}
           {driver && (
             <View className="rounded-2xl bg-bg border border-border p-3 mb-3">
-              <Text variant="body-sm" color="secondary" className="mb-1">Driver</Text>
-              <Text variant="body-sm" weight="semibold">{driver.fullName}</Text>
-              <Text variant="caption" color="secondary">{driver.vehicleModel} • {driver.vehicleNo}</Text>
+              <Text variant="heading-md" color="primary" className="mb-1">Driver</Text>
+              <Text variant="body-lg" weight="bold">{driver.fullName}</Text>
+              <Text variant="body-lg" color="primary">{driver.vehicleModel} • {driver.vehicleNo}</Text>
+              {
+                (booking.status === "driver_assigned" || booking.status === "driver_arriving" || booking.status === "in_progress") && (
+                  <Text variant="body-md" color="primary">{driver.phone}</Text>
+                )
+              }
             </View>
           )}
 

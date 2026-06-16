@@ -21,6 +21,7 @@ export interface PublicDriverProfile {
   vehicleNo: string;
   fullName: string;
   avatarUrl: string | null;
+  phone: string;
 }
 
 export interface UpdateDriverProfilePayload {
