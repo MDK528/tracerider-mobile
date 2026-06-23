@@ -213,11 +213,6 @@ export default function RideTracking() {
     try {
       await Share.share({
         message:
-          `I'm on a TraceRider ride.\n\n` +
-          `From: ${booking.pickupLocation}\n` +
-          `To: ${booking.dropLocation}\n` +
-          `Status: ${STATUS_LABELS[booking.status]}\n` +
-          `Fare: ₹${booking.fareAmount / 100}` +
           trackingLine,
       });
     } catch {}
