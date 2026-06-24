@@ -4,7 +4,7 @@
     "slug": "tracerider",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash-screen.png",
     "scheme": "traceridermobile",
     "userInterfaceStyle": "light",
     "ios": {
@@ -36,7 +36,8 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#0E1F1C",
-          "resizeMode": "contain"
+          "resizeMode": "contain",
+          "image": "./assets/images/splash-screen.png"
         }
       ],
       "expo-secure-store"
@@ -44,6 +45,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1fa33a0d-179b-4d90-9428-256b20165f18"
+      }
     }
   }
 }
