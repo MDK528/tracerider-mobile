@@ -11,9 +11,10 @@ import type { Booking } from "@/types/bookings";
 import type { PublicDriverProfile } from "@/types/driver";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, ScrollView, Share, View } from "react-native";
+import { ActivityIndicator, ScrollView, Share, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { MessageCircle, Send } from "lucide-react-native";
 
 const CANCELLABLE_STATUSES: Booking["status"][] = ["requested", "driver_assigned", "driver_arriving"];
 
@@ -254,6 +255,7 @@ export default function RideTracking() {
 
   const isCancellable = CANCELLABLE_STATUSES.includes(booking.status);
   const isTerminal = booking.status === "completed" || booking.status === "cancelled";
+  const isDriverAssigned = booking.status === "driver_assigned" || booking.status === "driver_arriving"
 
   return (
     <View className="flex-1">
@@ -272,7 +274,26 @@ export default function RideTracking() {
             </Text>
           </View>
           {!isTerminal && (
-            <Button label="Share" variant="outline" size="sm" fullWidth={false} onPress={handleShare} />
+            <View className="flex flex-row gap-2">
+              {/* <Button label="Share" variant="outline" size="sm" fullWidth={false} onPress={handleShare} /> */}
+              <TouchableOpacity
+                onPress={handleShare}
+                className="flex-row items-center gap-2 px-4 py-2 bg-surface border border-border rounded-card"
+              >
+                <Send size={18} color='#16191A'/>
+              </TouchableOpacity>
+
+              {
+                isDriverAssigned && (
+                  <TouchableOpacity
+                    onPress={() => router.push({ pathname: "/(rider)/chat/[bookingId]", params: { bookingId: booking.id } })}
+                    className="flex-row items-center gap-2 px-4 py-2 bg-surface border border-border rounded-card"
+                  >
+                    <MessageCircle size={18} color="#16191A" />
+                  </TouchableOpacity>
+                )
+              }
+            </View>
           )}
         </View>
 

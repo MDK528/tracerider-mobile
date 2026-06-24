@@ -17,12 +17,13 @@ import {
 } from "@/services/bookings";
 import type { Booking } from "@/types/bookings";
 import * as Location from "expo-location";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DriverRides() {
+  const router = useRouter();
   const [rideLoading, setRideLoading] = useState(false);
   const [availableRequests, setAvailableRequests] = useState<Booking[]>([]);
   const [activeRide, setActiveRide] = useState<Booking | null>(null);
@@ -308,6 +309,12 @@ export default function DriverRides() {
                       onPress={() => handleCancelRide(activeRide.id)}
                     />
                   )}
+                  <Button
+                    label="Chat"
+                    variant="secondary"
+                    size="sm"
+                    onPress={() => router.push({ pathname: "/(driver)/chat/[bookingId]", params: { bookingId: activeRide.id } })}
+                  />
                 </View>
               </View>
             ) : (
