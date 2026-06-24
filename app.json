@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tracerider-mobile",
-    "slug": "tracerider-mobile",
+    "name": "tracerider",
+    "slug": "tracerider",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
