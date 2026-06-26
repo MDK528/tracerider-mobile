@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "tracerider",
+    "name": "TraceRider",
     "slug": "tracerider",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/splash-screen.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "traceridermobile",
     "userInterfaceStyle": "light",
     "ios": {
@@ -32,15 +32,15 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       [
-        "expo-splash-screen",
+        "expo-build-properties", 
         {
-          "backgroundColor": "#0E1F1C",
-          "resizeMode": "contain",
-          "image": "./assets/images/splash-screen.png"
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
-      ],
-      "expo-secure-store"
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
