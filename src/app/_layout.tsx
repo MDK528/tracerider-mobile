@@ -1,3 +1,4 @@
+console.log("RIDER LAYOUT LOADED");
 import "@/global.css";
 import { useEffect } from "react";
 import { Stack, router } from "expo-router";
@@ -16,7 +17,7 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 // ─── Inner layout (needs AuthContext) ────────────────────────────────────────
 
@@ -26,17 +27,21 @@ function RootLayoutNav() {
   useEffect(() => {
     if (isLoading) return;
 
-    if (!isAuthenticated) {
-      router.replace("/(auth)/welcome");
-      return;
-    }
+  console.log("NAVIGATION START");
 
-    // Route based on role
-    if (user?.role === "driver") {
-      router.replace("/(driver)/home");
-    } else {
-      router.replace("/(rider)/home");
-    }
+  if (!isAuthenticated) {
+    console.log("GOING AUTH");
+    router.replace("/(auth)/welcome");
+    return;
+  }
+
+  if (user?.role === "driver") {
+    console.log("GOING DRIVER");
+    router.replace("/(driver)/home");
+  } else {
+    console.log("GOING RIDER");
+    router.replace("/(rider)/home");
+  }
   }, [isAuthenticated, isLoading, user]);
 
   return (
@@ -60,13 +65,20 @@ export default function RootLayout() {
     Inter_700Bold,
   });
 
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
+  console.log("RootLayout mounted");
 
-  if (!fontsLoaded && !fontError) return null;
+  // useEffect(() => {
+  //    console.log("fontsLoaded:", fontsLoaded);
+  //   console.log("fontError:", fontError);
+  //   if (fontsLoaded || fontError) {
+  //     console.log("Calling hideAsync");
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
