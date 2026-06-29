@@ -1,44 +1,162 @@
-import { View, Image, StatusBar } from "react-native";
-import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text } from "@/components/ui/Text";
-import { Button } from "@/components/ui/Button";
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import React from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
-export default function Welcome() {
+const { width, height } = Dimensions.get('window');
+
+interface AuthScreenProps {
+  onLogin?: () => void;
+  onSignup?: () => void;
+}
+
+const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
+  const handleLogin = () => {
+    if (onLogin) {
+      onLogin();
+      return;
+    }
+
+    router.push('/(auth)/login');
+  };
+
+  const handleSignup = () => {
+    if (onSignup) {
+      onSignup();
+      return;
+    }
+
+    router.push('/(auth)/register');
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-bg">
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
-
-      {/* Illustration */}
-      <View className="flex-1 items-center justify-center px-6">
-        <View className="w-64 h-64 bg-accent-bg rounded-lg items-center justify-center mb-8">
-          <Text variant="heading-lg">🚗</Text>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: '#0E1F1C' }}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 24,
+          paddingVertical: 60,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {/* Logo/Header Section */}
+        <View
+          style={{
+            marginBottom: 60,
+            alignItems: 'center',
+          }}
+        >
+          <View
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              // backgroundColor: '#1a3a36',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 24,
+            }}
+          >
+             <Image
+              source={require('../../../assets/images/splash-screen.png')}
+              style={{ width: 80, height: 80, borderRadius: 40 }}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 32,
+              fontWeight: '700',
+              color: '#F4F4F3',
+              marginBottom: 12,
+              textAlign: 'center',
+            }}
+          >
+            TraceRider
+          </Text>
         </View>
 
-        <Text variant="heading-md" weight="bold" color="primary" className="text-center mb-3">
-          Your ride,{"\n"}on your terms
-        </Text>
+        {/* Button Section */}
+        <View style={{ width: '100%', gap: 16 }}>
+          {/* Sign Up Button */}
+          <TouchableOpacity
+            onPress={handleSignup}
+            style={{
+              backgroundColor: '#0E1F1C',
+              borderWidth: 2,
+              borderColor: '#F4F4F3',
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#F4F4F3',
+              }}
+            >
+              Create New Account
+            </Text>
+          </TouchableOpacity>
 
-        <Text variant="body-md" color="secondary" className="text-center leading-6">
-          Fast, safe and affordable rides{"\n"}wherever you need to go
-        </Text>
-      </View>
+          {/* Login Button */}
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={{
+              backgroundColor: '#F4F4F3',
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#0E1F1C',
+              }}
+            >
+              Sign In
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      {/* Bottom Actions */}
-      <View className="px-6 pb-8 gap-3">
-        <Button
-          label="Get Started"
-          variant="primary"
-          size="lg"
-          onPress={() => router.push("/(auth)/register")}
-        />
-        <Button
-          label="I already have an account"
-          variant="ghost"
-          size="lg"
-          onPress={() => router.push("/(auth)/login")}
-        />
+        {/* Footer */}
+        <View
+          style={{
+            marginTop: 60,
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 13,
+              color: '#7a7a78',
+              textAlign: 'center',
+            }}
+          >
+            By continuing, you agree to our{' '}
+            <Text style={{ color: '#F4F4F3', fontWeight: '600' }}>
+              Terms & Conditions
+            </Text>
+          </Text>
+        </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
-}
+};
+
+export default AuthScreen;
