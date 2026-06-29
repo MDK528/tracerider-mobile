@@ -11,4 +11,5 @@ export const Colors = {
   mapPark: '#C9DDC8',
   accentBlue: '#3F7CF6',
   accentGreen: '#6FCF97',
+  accentDark: '#0E1F1C'
 } as const;

@@ -20,6 +20,7 @@ module.exports = {
       'map-park': '#C9DDC8',
       'accent-blue': '#3F7CF6',
       'accent-green': '#6FCF97',
+      'accent-dark': '#0E1F1C'
     },
     borderRadius: {
       card: '14px',
