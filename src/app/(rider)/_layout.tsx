@@ -38,6 +38,8 @@ export default function RiderLayout() {
       />
       <Tabs.Screen name="ride/[id]" options={{ href: null }} />
       <Tabs.Screen name="book" options={{ href: null }} />
+      <Tabs.Screen name="chat/[bookingId]" options={{href: null}} />
+      <Tabs.Screen name="confirm-ride" options={{href: null}} />
     </Tabs>
   );
 }

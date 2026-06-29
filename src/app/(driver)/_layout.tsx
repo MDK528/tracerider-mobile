@@ -36,6 +36,7 @@ export default function DriverLayout() {
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
+      <Tabs.Screen name="chat/[bookingId]" options={{href: null}} />
     </Tabs>
   );
 }
