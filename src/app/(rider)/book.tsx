@@ -129,7 +129,7 @@ export default function BookRide() {
         <View className="flex-row gap-3 mb-6">
           <View className="flex-1">
             <Button
-              label="Cash"
+              label="Pay Driver Directly"
               variant={paymentMethod === "cash" ? "primary" : "outline"}
               size="md"
               onPress={() => setPaymentMethod("cash")}
@@ -137,7 +137,7 @@ export default function BookRide() {
           </View>
           <View className="flex-1">
             <Button
-              label="Razorpay"
+              label="UPI"
               variant={paymentMethod === "razorpay" ? "primary" : "outline"}
               size="md"
               onPress={() => setPaymentMethod("razorpay")}
