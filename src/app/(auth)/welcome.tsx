@@ -37,7 +37,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: '#0E1F1C' }}
+      style={{ flex: 1}}
       contentContainerStyle={{ flexGrow: 1 }}
     >
       <View
@@ -61,7 +61,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
               width: 80,
               height: 80,
               borderRadius: 40,
-              // backgroundColor: '#1a3a36',
               justifyContent: 'center',
               alignItems: 'center',
               marginBottom: 24,
@@ -76,7 +75,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
             style={{
               fontSize: 32,
               fontWeight: '700',
-              color: '#F4F4F3',
+              color: '#0E1F1C',
               marginBottom: 12,
               textAlign: 'center',
             }}
@@ -91,31 +90,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
           <TouchableOpacity
             onPress={handleSignup}
             style={{
-              backgroundColor: '#0E1F1C',
-              borderWidth: 2,
-              borderColor: '#F4F4F3',
-              paddingVertical: 16,
-              paddingHorizontal: 24,
-              borderRadius: 12,
-              alignItems: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '600',
-                color: '#F4F4F3',
-              }}
-            >
-              Create New Account
-            </Text>
-          </TouchableOpacity>
-
-          {/* Login Button */}
-          <TouchableOpacity
-            onPress={handleLogin}
-            style={{
               backgroundColor: '#F4F4F3',
+              borderWidth: 1,
+              borderColor: '#0E1F1C',
               paddingVertical: 16,
               paddingHorizontal: 24,
               borderRadius: 12,
@@ -127,6 +104,28 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
                 fontSize: 16,
                 fontWeight: '600',
                 color: '#0E1F1C',
+              }}
+            >
+              Create New Account
+            </Text>
+          </TouchableOpacity>
+
+          {/* Login Button */}
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={{
+              backgroundColor: '#0E1F1C',
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              borderRadius: 12,
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: '#F4F4F3',
               }}
             >
               Sign In
@@ -149,7 +148,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin, onSignup }) => {
             }}
           >
             By continuing, you agree to our{' '}
-            <Text style={{ color: '#F4F4F3', fontWeight: '600' }}>
+            <Text style={{ color: '#0E1F1C', fontWeight: '600' }}>
               Terms & Conditions
             </Text>
           </Text>
